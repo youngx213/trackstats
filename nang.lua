@@ -4199,6 +4199,31 @@ local ret
 local ListFunc = {}
 local old
 local connect2
+old = hookmetamethod(game,"__index",function(...) 
+    if checkcaller() then return old(...) end
+    if not connect then 
+        connect=Instance.new("IntValue")
+        connect.Changed:Connect(function(val)
+            if val==100 then 
+                for k,v in pairs(ListFunc) do 
+                    if not v.Done then 
+                        spawn(function() 
+                            local s,e = pcall(function() 
+                                v.Res = k()
+                            end)
+                            if e then print(e) end
+                            v.tvk = true
+                            connect2.Value=100
+                            connect2.Value=0
+                        end)
+                        v.Done=true
+                    end
+                end
+            end 
+        end)
+    end
+    return old(...)
+end)
 repeat wait() until connect
 print("Connected")
 function warpF2(f) 
@@ -4446,7 +4471,6 @@ pcall(function()
 end)
 for k,v in pairs(game:GetService("Workspace")["Invisible Walls"]:GetChildren()) do v:Destroy() end
 for k,v in pairs(game:GetService("Workspace").Territories:GetChildren()) do v:Destroy() end
-for k,v in pairs(game:GetService("Workspace").MonsterBarriers:GetChildren()) do v:Destroy() end
 
 for k,v in pairs(game:GetService("Workspace").Map.OuterInvisWalls:GetChildren()) do v:Destroy() end
 local TvkStatCache = game:GetService("ReplicatedStorage").Events.RetrievePlayerStats:InvokeServer()
@@ -5038,7 +5062,7 @@ local times = 0.2
 local Running = true
 local Invisible = false
 local Particles = game.Workspace.Particles
-local Folder2 = Particles.Folder2
+local Folder2 = workspace.Particles
 local vu = game:GetService("VirtualUser")
 local x = 0
 local y = 0

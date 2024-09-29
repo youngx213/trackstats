@@ -4199,30 +4199,6 @@ local ret
 local ListFunc = {}
 local old
 local connect2
-    if checkcaller() then return old(...) end
-    if not connect then 
-        connect=Instance.new("IntValue")
-        connect.Changed:Connect(function(val)
-            if val==100 then 
-                for k,v in pairs(ListFunc) do 
-                    if not v.Done then 
-                        spawn(function() 
-                            local s,e = pcall(function() 
-                                v.Res = k()
-                            end)
-                            if e then print(e) end
-                            v.tvk = true
-                            connect2.Value=100
-                            connect2.Value=0
-                        end)
-                        v.Done=true
-                    end
-                end
-            end 
-        end)
-    end
-    return old(...)
-end)
 repeat wait() until connect
 print("Connected")
 function warpF2(f) 

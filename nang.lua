@@ -4199,7 +4199,6 @@ local ret
 local ListFunc = {}
 local old
 local connect2
-old = hookmetamethod(game,"__index",function(...) 
     if checkcaller() then return old(...) end
     if not connect then 
         connect=Instance.new("IntValue")
